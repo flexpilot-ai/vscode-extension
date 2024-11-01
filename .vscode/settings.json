@@ -1,0 +1,49 @@
+{
+  "search.exclude": { "out": true },
+  "files.exclude": { "out": false },
+  "typescript.tsc.autoDetect": "off",
+  "prettier.prettierPath": "./node_modules/prettier",
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.indentSize": "tabSize",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.indentSize": "tabSize",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.indentSize": "tabSize",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "cSpell.words": [
+    "Codestral",
+    "davinci",
+    "flexpilot",
+    "Groq",
+    "groqcloud",
+    "ISCM",
+    "Kwargs",
+    "machineid",
+    "mistralai",
+    "NOSONAR",
+    "softprops",
+    "uuidv"
+  ],
+  "codeQL.createQuery.qlPackLocation": "/Users/mohanram/Desktop/Flexpilot/vscode-extension"
+}

@@ -1,0 +1,81 @@
+name: Release VS Code Extension
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  release-job:
+    name: "Release VS Code Extension"
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify version match
+        run: |
+          # Get version from package.json
+          PKG_VERSION=$(node -p "require('./package.json').version")
+
+          # Get release version
+          RELEASE_VERSION=${GITHUB_REF#refs/tags/}
+
+          # Validate release tag format
+          if ! [[ $RELEASE_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Invalid release tag format!"
+            echo "Release tag must follow the format: 1.2.3 (MAJOR.MINOR.PATCH)"
+            echo "Got: $RELEASE_VERSION"
+            exit 1
+          fi
+
+          # Validate package.json version format
+          if ! [[ $PKG_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Invalid package.json version format!"
+            echo "Version must follow SemVer format: 1.2.3 (MAJOR.MINOR.PATCH)"
+            echo "Got: $PKG_VERSION"
+            exit 1
+          fi
+
+          echo "Package.json version: $PKG_VERSION"
+          echo "Release version: $RELEASE_VERSION"
+
+          # Check if package.json version matches release version
+          if [ "$PKG_VERSION" != "$RELEASE_VERSION" ]; then
+            echo "Error: Version mismatch!"
+            echo "package.json version ($PKG_VERSION) does not match release version ($RELEASE_VERSION)"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install vsce tool
+        run: npm install -g @vscode/vsce
+
+      - name: Checking Linting
+        run: npm run lint
+
+      - name: Package extension
+        run: vsce package --out "extension.vsix"
+
+      - name: Upload extension vsix as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "extension.vsix"
+          path: "extension.vsix"
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: extension.vsix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release to VS Code Marketplace
+        run: vsce publish -p ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}

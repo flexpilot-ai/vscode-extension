@@ -1,0 +1,342 @@
+{
+  "publisher": "flexpilot",
+  "name": "vscode-extension",
+  "displayName": "Flexpilot",
+  "description": "Open-Source, Native and a True GitHub Copilot Alternative for VS Code",
+  "version": "1.95.0",
+  "icon": "assets/logo.png",
+  "license": "GPL-3.0-only",
+  "pricing": "Free",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flexpilot-ai/vscode-extension"
+  },
+  "categories": [
+    "AI",
+    "Chat",
+    "Data Science",
+    "Education",
+    "Testing",
+    "Programming Languages",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "flexpilot",
+    "free",
+    "open",
+    "open-source",
+    "ai",
+    "openai",
+    "codex",
+    "pilot",
+    "snippets",
+    "documentation",
+    "autocomplete",
+    "intellisense",
+    "refactor",
+    "javascript",
+    "python",
+    "typescript",
+    "php",
+    "go",
+    "golang",
+    "ruby",
+    "c++",
+    "c#",
+    "java",
+    "kotlin",
+    "co-pilot"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "test": "vscode-test",
+    "format": "prettier --write \"**/*.{ts,mts,cts,tsx,js,mjs,cjs,jsx,json,md}\"",
+    "lint": "eslint --config=eslint.config.mjs --fix",
+    "prepare": "concurrently \"husky\" \"node ./build/env-setup.mjs\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@types/markdown-it": "^14.1.1",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^18.19.61",
+    "@types/turndown": "^5.0.5",
+    "@types/uuid": "^10.0.0",
+    "@vscode/test-cli": "^0.0.4",
+    "concurrently": "^9.0.1",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.11.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "node-loader": "^2.0.0",
+    "octokit": "^4.0.2",
+    "prettier": "3.3.3",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.12.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "contributes": {
+    "walkthroughs": [
+      {
+        "id": "Flexpilot",
+        "title": "Flexpilot AI",
+        "description": "This is a walkthrough for getting started with Flexpilot.",
+        "icon": "assets/logo.png",
+        "steps": [
+          {
+            "id": "signin",
+            "title": "GitHub Sign In",
+            "description": "Sign in with GitHub to use Flexpilot, your AI pair programmer.\n[Sign In](command:flexpilot.github.signin)",
+            "media": {
+              "markdown": "assets/walkthrough.md"
+            },
+            "completionEvents": [
+              "onContext:flexpilot:walkthroughSignin"
+            ]
+          },
+          {
+            "id": "configureModel",
+            "title": "Configure Model",
+            "description": "Configure the language model provider for Flexpilot.\n[Configure](command:flexpilot.configureModel)",
+            "media": {
+              "markdown": "assets/walkthrough.md"
+            },
+            "completionEvents": [
+              "onContext:flexpilot:walkthroughConfigureModel"
+            ]
+          },
+          {
+            "id": "panelChat",
+            "title": "Start Chatting",
+            "description": "Chat with Flexpilot in the panel chat view with the configured model.\n[Start Chat](command:workbench.action.chat.open?%7B%22query%22%3A%22What%20model%20do%20you%20use%3F%22%7D)",
+            "media": {
+              "markdown": "assets/walkthrough.md"
+            },
+            "completionEvents": [
+              "onContext:flexpilot:walkthroughPanelChat"
+            ]
+          }
+        ]
+      }
+    ],
+    "menus": {},
+    "configuration": {
+      "type": "object",
+      "title": "Flexpilot",
+      "properties": {
+        "flexpilot.completions.debounceWait": {
+          "type": "number",
+          "minimum": 10,
+          "default": 100,
+          "description": "The time in milliseconds to wait before triggering a completion."
+        },
+        "flexpilot.completions.contextPrefixWeight": {
+          "type": "number",
+          "maximum": 0.95,
+          "minimum": 0.05,
+          "default": 0.85,
+          "description": "The proportion of prefix to suffix tokens in the context for completions."
+        },
+        "flexpilot.completions.temperature": {
+          "type": "number",
+          "maximum": 1,
+          "minimum": 0,
+          "default": 0.1,
+          "description": "The randomness of completions, with 0.0 being deterministic and 1.0 being random."
+        },
+        "flexpilot.panelChat.temperature": {
+          "type": "number",
+          "maximum": 1,
+          "minimum": 0,
+          "default": 0.1,
+          "description": "The randomness of panel chat, with 0.0 being deterministic and 1.0 being random."
+        },
+        "flexpilot.panelChat.showTokenUsage": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show token usage in panel chat."
+        },
+        "flexpilot.inlineChat.temperature": {
+          "type": "number",
+          "maximum": 1,
+          "minimum": 0,
+          "default": 0.1,
+          "description": "The randomness of inline chat, with 0.0 being deterministic and 1.0 being random."
+        },
+        "flexpilot.inlineChat.showTokenUsage": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show token usage in inline chat."
+        },
+        "flexpilot.chatSuggestions.temperature": {
+          "type": "number",
+          "maximum": 1,
+          "minimum": 0,
+          "default": 0.1,
+          "description": "The randomness of chat suggestions, with 0.0 being deterministic and 1.0 being random."
+        },
+        "flexpilot.chatTitle.temperature": {
+          "type": "number",
+          "maximum": 1,
+          "minimum": 0,
+          "default": 0.1,
+          "description": "The randomness of chat title, with 0.0 being deterministic and 1.0 being random."
+        },
+        "flexpilot.gitCommitMessage.temperature": {
+          "type": "number",
+          "maximum": 1,
+          "minimum": 0,
+          "default": 0.1,
+          "description": "The randomness of GIT commit messages, with 0.0 being deterministic and 1.0 being random."
+        }
+      }
+    },
+    "chatParticipants": [
+      {
+        "id": "flexpilot.panel.default",
+        "name": "flexpilot",
+        "fullName": "Flexpilot",
+        "description": "Ask Flexpilot or type / for commands",
+        "isDefault": true,
+        "locations": [
+          "panel"
+        ]
+      },
+      {
+        "id": "flexpilot.editor.default",
+        "name": "flexpilot",
+        "fullName": "Flexpilot",
+        "description": "Ask Flexpilot or type / for commands",
+        "isDefault": true,
+        "locations": [
+          "editor"
+        ],
+        "defaultImplicitVariables": [
+          "_inlineChatContext",
+          "_inlineChatDocument"
+        ]
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "workbench.panel.chat.view.copilot",
+        "contents": "Failed to activate Flexpilot. Please check the logs for more information.\n[View Logs](command:flexpilot.viewLogs)",
+        "when": "flexpilot:isError"
+      },
+      {
+        "view": "workbench.panel.chat.view.copilot",
+        "contents": "$(loading~spin) Please wait while Flexpilot is getting activated",
+        "when": "!flexpilot:isError && !flexpilot:isLoaded"
+      },
+      {
+        "view": "workbench.panel.chat.view.copilot",
+        "contents": "Sign in with GitHub to use Flexpilot, your AI pair programmer.\n[Sign In](command:flexpilot.github.signin)",
+        "when": "!flexpilot:isError && flexpilot:isLoaded && !flexpilot:isLoggedIn"
+      }
+    ],
+    "commands": [
+      {
+        "command": "flexpilot.git.generateCommitMessage",
+        "title": "Generate Commit Message",
+        "icon": "$(sparkle)",
+        "enablement": "false",
+        "category": "Flexpilot"
+      },
+      {
+        "command": "flexpilot.github.signin",
+        "title": "Sign In with GitHub"
+      },
+      {
+        "command": "flexpilot.configureModel",
+        "title": "Configure the Language Model Provider",
+        "category": "Flexpilot",
+        "enablement": "flexpilot:isLoggedIn"
+      },
+      {
+        "command": "flexpilot.viewLogs",
+        "category": "Flexpilot",
+        "title": "View logs from Flexpilot output channel"
+      },
+      {
+        "command": "flexpilot.status.icon.menu",
+        "enablement": "false",
+        "title": "Status Icon Menu"
+      }
+    ],
+    "icons": {
+      "flexpilot-default": {
+        "description": "Flexpilot Default Logo",
+        "default": {
+          "fontPath": "assets/fonts.woff",
+          "fontCharacter": "\\e900"
+        }
+      },
+      "flexpilot-disabled": {
+        "description": "Flexpilot Disabled Logo",
+        "default": {
+          "fontPath": "assets/fonts.woff",
+          "fontCharacter": "\\e901"
+        }
+      }
+    },
+    "iconFonts": [
+      {
+        "id": "flexpilot-font",
+        "src": [
+          {
+            "path": "assets/fonts.woff",
+            "format": "woff"
+          }
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^0.0.51",
+    "@ai-sdk/azure": "^0.0.45",
+    "@ai-sdk/google": "^0.0.55",
+    "@ai-sdk/mistral": "^0.0.42",
+    "@ai-sdk/openai": "^0.0.66",
+    "@flexpilot-ai/tokenizers": "^0.0.1",
+    "@google/generative-ai": "^0.21.0",
+    "@mistralai/mistralai": "^1.1.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "ai": "^3.4.29",
+    "axios": "^1.7.2",
+    "comment-json": "^4.2.4",
+    "groq-sdk": "^0.5.0",
+    "inversify": "^6.0.3",
+    "markdown-it": "^14.1.0",
+    "openai": "^4.67.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "reflect-metadata": "^0.2.2",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  },
+  "lint-staged": {
+    "*.{json,md}": [
+      "prettier --write"
+    ],
+    "*.{ts,mts,cts,tsx,js,mjs,cjs,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  }
+}
