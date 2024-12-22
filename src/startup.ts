@@ -264,7 +264,14 @@ export const updateRuntimeArguments = async () => {
 
   // Hide the chat setup if it is visible
   try {
-    await vscode.commands.executeCommand("workbench.action.chat.hideSetup");
+    const currentOfferSetup = vscode.workspace
+      .getConfiguration("chat.experimental")
+      .get("offerSetup");
+    if (currentOfferSetup != false) {
+      vscode.workspace
+        .getConfiguration("chat.experimental")
+        .update("offerSetup", false, vscode.ConfigurationTarget.Global);
+    }
   } catch (error) {
     logger.warn(`Chat setup not found: ${String(error)}`);
   }
