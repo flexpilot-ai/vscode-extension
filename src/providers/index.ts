@@ -8,9 +8,12 @@ import {
   AzureOpenAIChatModelProvider,
   AzureOpenAICompletionModelProvider,
 } from "./azure";
+import { DeepSeekCompletionModelProvider } from "./deepseek";
 import { GenericChatModelProvider } from "./generic";
 import { GoogleChatModelProvider } from "./google";
 import { GroqCloudChatModelProvider } from "./groq";
+import { LlamaCppCompletionModelProvider } from "./llamacpp";
+import { OllamaCompletionModelProvider } from "./ollama";
 import {
   MistralAIChatModelProvider,
   MistralAICompletionModelProvider,
@@ -34,6 +37,9 @@ export const ModelProviders = [
   OpenAICompletionModelProvider,
   MistralAICompletionModelProvider,
   AzureOpenAICompletionModelProvider,
+  LlamaCppCompletionModelProvider,
+  OllamaCompletionModelProvider,
+  DeepSeekCompletionModelProvider,
 ] as const;
 
 /**
