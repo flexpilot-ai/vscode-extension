@@ -29,7 +29,7 @@ export const ALLOWED_COMPLETION_MODELS = [
       "https://cdn.jsdelivr.net/gh/flexpilot-ai/vscode-extension/tokenizers/cl100k_base.json",
   },
   {
-    regex: "^deepseek-.*",
+    regex: "^deepseek-chat",
     contextWindow: 128000,
     tokenizerUrl:
       "https://cdn.jsdelivr.net/gh/flexpilot-ai/vscode-extension/tokenizers/deepseek-v3.json",
