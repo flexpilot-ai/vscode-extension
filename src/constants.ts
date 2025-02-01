@@ -28,6 +28,18 @@ export const ALLOWED_COMPLETION_MODELS = [
     tokenizerUrl:
       "https://cdn.jsdelivr.net/gh/flexpilot-ai/vscode-extension/tokenizers/cl100k_base.json",
   },
+  {
+    regex: "^deepseek-chat",
+    contextWindow: 128000,
+    tokenizerUrl:
+      "https://cdn.jsdelivr.net/gh/flexpilot-ai/vscode-extension/tokenizers/deepseek-v3.json",
+  },
+  {
+    regex: "^qwen2\\.5-coder.*-base",
+    contextWindow: 32768,
+    tokenizerUrl:
+      "https://cdn.jsdelivr.net/gh/flexpilot-ai/vscode-extension/tokenizers/qwen2.5-coder.json",
+  },
 ];
 
 /**
